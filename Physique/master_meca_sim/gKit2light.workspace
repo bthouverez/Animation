@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="gKit2light">
+		<Project filename="shader_kit.cbp" active="1">
+		</Project>
+		<Project filename="master_meca_sim_etudiant.cbp">
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>

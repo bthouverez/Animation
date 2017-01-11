@@ -1,0 +1,11 @@
+NbIter=100000000;
+
+Gx=0.0;
+Gy=-4.0;
+Gz=0;
+
+viscosite=0.995;
+
+objet=mss;
+
+#objet=particule;
