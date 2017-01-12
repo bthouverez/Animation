@@ -19,6 +19,7 @@ public:
    //! Créer un squelette ayant la même structure que définit dans le BVH c'est à dire
    //! creer le tableau de SkeletonJoint à la bonne taille, avec les parentId initialsé pour chaque case
    void init(const simea::BVH& bvh);
+   void init(const simea::BVH& bvh, Transform tr);
 
    //! Renvoie la position de l'articulation i en multipliant le m_l2w par le Point(0,0,0)
    Vector getJointPosition(int i) const;
@@ -38,7 +39,7 @@ public:
 
 
    //! Positionne ce squelette entre la position frameNbSrc du BVH Src et la position frameNbDst du bvh Dst
-   //void setPoseInterpolation(const BVH& bvhSrc, int frameNbSrc, const BVH& bvhDst, int frameNbDst, float t);
+   void setPoseInterpolation(const simea::BVH& bvhSrc, int frameNbSrc, const simea::BVH& bvhDst, int frameNbDst, float t);
 
    //! Positionne ce squelette entre la position frameNbSrc du BVH Src et la position frameNbDst du bvh Dst
    //! idem à setPoseInterpolation mais interpole avec des quaternions sur chaque articulations

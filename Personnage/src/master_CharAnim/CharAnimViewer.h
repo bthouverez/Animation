@@ -15,6 +15,7 @@ class CharAnimViewer : public Viewer
 {
 public:
     CharAnimViewer();
+    CharAnimViewer(std::string bvh_filename);
 
     int init();
     int render();
@@ -22,18 +23,19 @@ public:
 
 
 protected:
-
     BVH m_bvh;
     int m_frameNumber;
+    std::string m_bvh_file;
 
     Skeleton m_ske;
+    Skeleton m_ske2;
+    Skeleton m_ske3;
 
 
 	void bvhDrawGL(const BVH&, int frameNumber);
 	void bvhDrawGLRec(const BVHJoint&, int frameNumber, Transform& T); // la fonction récursive sur le squelette
 
-    void skeletonDraw(const Skeleton& ske); 
-    void skeletonUpdate(Skeleton& ske); 
+    void skeletonDraw(const Skeleton& ske, Transform t); 
 
 	// les 6 variables qui suivent sont pour illustrer comment marche les quaternions, vous pouvez les supprimer rapdidement :
     float m_angle_a;
