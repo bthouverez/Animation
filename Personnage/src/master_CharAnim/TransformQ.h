@@ -27,6 +27,7 @@ along with Sime.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 #include <iostream>
 #include <vec.h>
+#include <quaternion.h>
 
 
 	/*! \brief
@@ -42,26 +43,35 @@ along with Sime.  If not, see <http://www.gnu.org/licenses/>.
 
 		TransformQ(const Quaternion& _Q, const Vector& _T = Vector(0, 0, 0)) : Q(_Q), T(_T) {}
 
+		TransformQ(const Transform & t) {
+			Q.setFromRotationMatrix(t.m);
+			T = t[3];
+		}
+
+
 
 		/*! \brief Tr x Tr */
 		friend inline TransformQ operator*(const TransformQ& a, const TransformQ& b)
 		{
-			// TODO
-			return TransformQ();
+			return TransformQ(a.Q * b.Q, a.Q * b.T + a.T);
 		}
 
 
-		friend inline Vector 		operator*(const TransformQ& a, const Vector& v)
+
+		friend inline Point operator*(const TransformQ& a, const Point& p)
 		{
-			// TODO
-			return Vector(0, 0, 0);
+			return Point(a.Q * Vector(p) + a.T);
+		}
+		
+		friend inline Vector operator*(const TransformQ& a, const Vector& v)
+		{
+			return a.Q * v;
 		}
 
 
 		inline static TransformQ slerp(const TransformQ& a, const TransformQ& b, float t)
 		{
-			// TODO
-			return TransformQ();
+			return TransformQ(Quaternion::slerp(a.Q, b.Q, t), (1-t) * a.T + t * b.T);
 		}
 
 		void setIdentity()
@@ -105,11 +115,18 @@ along with Sime.  If not, see <http://www.gnu.org/licenses/>.
 			m[11] = T.z;
 		}
 
+		Transform getTransform() const {
+			Transform res;
+			getMatrix44(res.m);
+			return res;
+		}
+
 		friend inline std::ostream& operator<<(std::ostream& o, const TransformQ& a)
 		{
 			o << "Q=" << a.Q << ", T=" << a.T;
 			return o;
 		}
+
 
 	protected:
 		Quaternion Q;

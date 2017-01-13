@@ -3,6 +3,7 @@
 
 #include "BVH.h"
 #include "mat.h"
+#include "TransformQ.h"
 
 class Skeleton
 {
@@ -43,7 +44,7 @@ public:
 
    //! Positionne ce squelette entre la position frameNbSrc du BVH Src et la position frameNbDst du bvh Dst
    //! idem à setPoseInterpolation mais interpole avec des quaternions sur chaque articulations
-   //void setPoseInterpolationQ(const BVH& bvhSrc, int frameNbSrc, const BVH& bvhDst, int frameNbDst, float t);
+   void setPoseInterpolationQ(const simea::BVH& bvhSrc, int frameNbSrc, const simea::BVH& bvhDst, int frameNbDst, float t);
 
 
    

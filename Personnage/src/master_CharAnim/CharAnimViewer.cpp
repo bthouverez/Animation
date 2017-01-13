@@ -30,10 +30,14 @@ int CharAnimViewer::init()
 
     //m_bvh.init("data/bvh/Robot.bvh" );
 	m_bvh.init(m_bvh_file);
-    m_ske.init(m_bvh);
 
+    m_ske.init(m_bvh);
     m_ske2.init(m_bvh);
     m_ske3.init(m_bvh);
+
+    m_ske4.init(m_bvh);
+    m_ske5.init(m_bvh);
+    m_ske6.init(m_bvh);
 
     m_frameNumber = 0;
     cout<<endl<<"========================"<<endl;
@@ -122,12 +126,12 @@ void CharAnimViewer::skeletonDraw(const Skeleton& ske, Transform t) {
     for(int ii = 0; ii < ske.numberOfJoint(); ii++) {
 
         Vector pos = ske.getJointPosition(ii);
-        draw_sphere(t(pos));
+        draw_sphere(Vector(t(Point(pos))), 0.5);
 
         Vector pos_father(0,0,0);
         if(ii > 0) {
             pos_father = ske.getJointPosition(ske.getParentId(ii));
-            draw_cylinder(t(pos), t(pos_father), 0.5);
+            draw_cylinder(Vector(t(Point(pos))), Vector(t(Point(pos_father))), 0.2);
         } 
     }
 }
@@ -145,8 +149,12 @@ int CharAnimViewer::render()
 	// Affiche une pose du bvh
 	// bvhDrawGL(m_bvh, m_frameNumber);
     skeletonDraw(m_ske, Identity());
-    skeletonDraw(m_ske2, Translation(10.0, 0.0, 5.0));
-    skeletonDraw(m_ske3, Translation(0.0, -5.1, 0.0));
+    skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
+    skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
+
+    skeletonDraw(m_ske4, Translation(0.0, 50.0, 0.0));
+    skeletonDraw(m_ske5, Translation(75.0, 50.0, -15.0));
+    skeletonDraw(m_ske6, Translation(-75.0, 50.0, -15.0));
 
 
 /*
@@ -174,25 +182,22 @@ int CharAnimViewer::update( const float time, const float delta )
     // time est le temps ecoule depuis le demarrage de l'application, en millisecondes,
     // delta est le temps ecoule depuis l'affichage de la derniere image / le dernier appel a draw(), en millisecondes.
 
-	if (key_state('z')) { 
-        // clear_key_state('n');  
+    if (key_state('z')) { 
+        //clear_key_state('z');  
         m_frameNumber++; 
         m_frameNumber = m_frameNumber % m_bvh.getNumberOfFrame(); 
-        // cout << m_frameNumber << endl; 
-        m_ske.setPose(m_bvh, m_frameNumber);
-        m_ske2.setPose(m_bvh, (m_frameNumber+10) % m_bvh.getNumberOfFrame());
-        m_ske3.setPose(m_bvh, (m_frameNumber+25) % m_bvh.getNumberOfFrame());
-    }
-	if (key_state('b')) { 
-        // clear_key_state('b');  
-        m_frameNumber--; 
-        m_frameNumber = m_frameNumber < 0 ? m_bvh.getNumberOfFrame()-1 : m_frameNumber; 
-        // cout << m_frameNumber << endl; 
-        m_ske.setPose(m_bvh, m_frameNumber);
+         cout << m_frameNumber << endl; 
+
+        m_ske.setPoseInterpolation(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
         m_ske2.setPose(m_bvh, m_frameNumber);
-        m_ske3.setPose(m_bvh, m_frameNumber);
-    }
-    
+        m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+        m_ske6.setPose(m_bvh, m_frameNumber);
+        m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+
+
+        m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+    }   
+   
 
     m_angle_a = int(0.1*time)%360;
     m_angle_b = int(0.1*time+40)%360;

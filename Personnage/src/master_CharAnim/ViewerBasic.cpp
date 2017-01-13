@@ -58,7 +58,7 @@ int ViewerBasic::init()
     init_axe();
     init_grid();
     init_cube();
-    init_quad();
+    //init_quad();
 
     return 1;
 }

@@ -31,6 +31,10 @@ protected:
     Skeleton m_ske2;
     Skeleton m_ske3;
 
+    Skeleton m_ske4;
+    Skeleton m_ske5;
+    Skeleton m_ske6;
+
 
 	void bvhDrawGL(const BVH&, int frameNumber);
 	void bvhDrawGLRec(const BVHJoint&, int frameNumber, Transform& T); // la fonction récursive sur le squelette
