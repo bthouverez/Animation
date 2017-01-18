@@ -148,13 +148,13 @@ void Skeleton::setPoseInterpolation(const BVH& bvhSrc, int frameNbSrc, const BVH
 	            switch(channelSrc.getAxis())
 	            {
 	                case AXIS_X: 
-	                	Trans = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t + (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	Trans = Translation( Vector(channelSrc.getData(frameNbSrc), 0, 0) * t + (1-t) * Vector(channelDst.getData(frameNbDst), 0, 0));
 	                	break;
 	                case AXIS_Y: 
-	                	Trans = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t + (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	Trans = Translation( Vector(0, channelSrc.getData(frameNbSrc), 0) * t + (1-t) * Vector(0, channelDst.getData(frameNbDst), 0));
 	                	break;
 	                case AXIS_Z: 
-	                	Trans = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t + (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	Trans = Translation( Vector(0, 0, channelSrc.getData(frameNbSrc)) * t + (1-t) * Vector(0, 0, channelDst.getData(frameNbDst)));
 	                	break;
 	                default: 
 	                	break;
@@ -169,42 +169,42 @@ void Skeleton::setPoseInterpolation(const BVH& bvhSrc, int frameNbSrc, const BVH
 
 void Skeleton::setPoseInterpolationQ(const simea::BVH& bvhSrc, int frameNbSrc, const simea::BVH& bvhDst, int frameNbDst, float t) {
 	for(int ii = 0; ii < numberOfJoint(); ii++)	{
-    	Transform TransSrc, TransDst;
-		// Recuperation des joints
-		SkeletonJoint s_joint = m_joints[ii];
-		BVHJoint jointSrc = bvhSrc.getJoint(ii);
-		// Father transform
-		Transform f2w = Identity();
-		if(!jointSrc.isRoot()) {
-			f2w = m_joints.at(s_joint.m_parentId).m_l2w;
-		}
-		// Child transform 
-		Transform l2w = f2w;
-		// Offset
-	    float x,y,z;
-	    jointSrc.getOffset(x,y,z);
-	    l2w = l2w * Translation(Vector(x,y,z));
+    	TransformQ TransSrc, TransDst;
+	
+        float x_s, y_s, z_s, x_d, y_d, z_d;
+
+        BVHJoint jointSrc = bvhSrc.getJoint(ii);
+        jointSrc.getOffset(x_s, y_s, z_s);
+
+        BVHJoint jointDst = bvhDst.getJoint(ii);
+        jointDst.getOffset(x_d, y_d, z_d);
+
+        TransSrc = TransformQ(Vector(x_s, y_s, z_s));
+        TransDst = TransformQ(Vector(x_d, y_d, z_d));
+
 	    // Translation / Rotation
 	    for(int jj = 0; jj < jointSrc.getNumberOfChannel(); jj++)
 	    {
 	        BVHChannel channelSrc = jointSrc.getChannel(jj);
+	        float dataSrc = channelSrc.getData(frameNbSrc);
 			BVHJoint jointDst = bvhDst.getJoint(ii);
 	        BVHChannel channelDst = jointDst.getChannel(jj);
+	        float dataDst = channelSrc.getData(frameNbDst);
 	        if(channelSrc.isRotation())
 	        {
 	            switch(channelSrc.getAxis())
 	            {
 	                case AXIS_X: 
-	                	TransSrc = RotationX( channelSrc.getData(frameNbSrc) * (1 - t) );
-	                	TransDst = RotationX( t * channelDst.getData(frameNbDst));
+	                	TransSrc = TransSrc * TransformQ(Vector(1.f, 0.f, 0.f), dataSrc);
+	                	TransDst = TransDst * TransformQ(Vector(1.f, 0.f, 0.f), dataDst);
 	                	break;
 	                case AXIS_Y: 
-	                	TransSrc = RotationY( channelSrc.getData(frameNbSrc) * (1 - t) );
-	                	TransDst = RotationY( t * channelDst.getData(frameNbDst));
+	                	TransSrc = TransSrc * TransformQ(Vector(0.f, 1.f, 0.f), dataSrc);
+	                	TransDst = TransDst * TransformQ(Vector(0.f, 1.f, 0.f), dataDst);
 	                	break;
 	                case AXIS_Z: 
-	                	TransSrc = RotationZ( channelSrc.getData(frameNbSrc) * (1 - t) );
-	                	TransDst = RotationZ( t * channelDst.getData(frameNbDst));
+	                	TransSrc = TransSrc * TransformQ(Vector(0.f, 0.f, 1.f), dataSrc);
+	                	TransDst = TransDst * TransformQ(Vector(0.f, 0.f, 1.f), dataDst);
 	                	break;
 	                default: 
 	                	break;
@@ -215,25 +215,33 @@ void Skeleton::setPoseInterpolationQ(const simea::BVH& bvhSrc, int frameNbSrc, c
 	            switch(channelSrc.getAxis())
 	            {
 	                case AXIS_X: 
-	                	TransSrc = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t );
-	                	TransDst = Translation( (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	TransSrc = TransSrc * TransformQ(Vector(dataSrc, 0.f, 0.f));
+	                	TransDst = TransDst * TransformQ(Vector(dataDst, 0.f, 0.f));
 	                	break;
 	                case AXIS_Y: 
-	                	TransSrc = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t );
-	                	TransDst = Translation( (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	TransSrc = TransSrc * TransformQ(Vector(0.f, dataSrc, 0.f));
+	                	TransDst = TransDst * TransformQ(Vector(0.f, dataDst, 0.f));
 	                	break;
 	                case AXIS_Z: 
-	                	TransSrc = Translation( Vector(0,0,channelSrc.getData(frameNbSrc)) * t );
-	                	TransDst = Translation( (1-t) * Vector(channelDst.getData(frameNbDst),0,0));
+	                	TransSrc = TransSrc * TransformQ(Vector(0.f, 0.f, dataSrc));
+	                	TransDst = TransDst * TransformQ(Vector(0.f, 0.f, dataDst));
 	                	break;
 	                default: 
 	                	break;
 	            }
 	        }
 	    }
-	    TransformQ quatSrc(TransSrc);
-	    TransformQ quatDst(TransDst);
-	    TransformQ res = TransformQ::slerp(quatSrc, quatDst, t);
-		m_joints[ii].m_l2w = res.getTransform();
+
+
+	    TransformQ resQ = TransformQ::slerp(TransSrc, TransDst, t);
+		Transform res;
+        resQ.getMatrix44<Transform>(res);
+
+        Transform l2w = Identity();
+        if(m_joints[ii].m_parentId != -1) {
+            l2w = m_joints[m_joints[ii].m_parentId].m_l2w;
+        }
+
+        m_joints[ii].m_l2w = l2w * res;
 	}    
 }

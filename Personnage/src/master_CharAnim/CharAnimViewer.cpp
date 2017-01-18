@@ -186,9 +186,11 @@ int CharAnimViewer::update( const float time, const float delta )
         //clear_key_state('z');  
         m_frameNumber++; 
         m_frameNumber = m_frameNumber % m_bvh.getNumberOfFrame(); 
-         cout << m_frameNumber << endl; 
+        cout << m_frameNumber << endl; 
 
-        m_ske.setPoseInterpolation(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+
+        m_ske.setPoseInterpolation(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+        // m_ske.setPose(m_bvh, m_frameNumber);
         m_ske2.setPose(m_bvh, m_frameNumber);
         m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
         m_ske6.setPose(m_bvh, m_frameNumber);
@@ -197,8 +199,11 @@ int CharAnimViewer::update( const float time, const float delta )
 
         m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
     }   
+    // m_ske.setPose(m_bvh, int(time / 75.0) % m_bvh.getNumberOfFrame());
+    std::cout << "time " << time << std::endl;
+    std::cout << "delta " << delta << std::endl;
    
-
+/*
     m_angle_a = int(0.1*time)%360;
     m_angle_b = int(0.1*time+40)%360;
     m_angle_milieu_ab = (m_angle_a+m_angle_b)/2;
@@ -207,7 +212,7 @@ int CharAnimViewer::update( const float time, const float delta )
     m_quat_a.setAxisAngleDegree(Z,m_angle_a); //m_quat_a.invert();
     m_quat_b.setAxisAngleDegree(Z,m_angle_b); //m_quat_b.invert();
     m_quat_milieu_ab = Quaternion::slerp( m_quat_a, m_quat_b, 0.5);
-
+*/
     return 0;
 }
 
