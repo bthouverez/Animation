@@ -32,12 +32,12 @@ int CharAnimViewer::init()
 	m_bvh.init(m_bvh_file);
 
     m_ske.init(m_bvh);
-    m_ske2.init(m_bvh);
-    m_ske3.init(m_bvh);
+    // m_ske2.init(m_bvh);
+    // m_ske3.init(m_bvh);
 
-    m_ske4.init(m_bvh);
-    m_ske5.init(m_bvh);
-    m_ske6.init(m_bvh);
+    // m_ske4.init(m_bvh);
+    // m_ske5.init(m_bvh);
+    // m_ske6.init(m_bvh);
 
     m_frameNumber = 0;
     cout<<endl<<"========================"<<endl;
@@ -45,19 +45,6 @@ int CharAnimViewer::init()
     cout<<m_bvh<<endl;
     cout<<endl<<"========================"<<endl;
 
-
-    m_angle_a=0;
-    m_angle_b=40;
-    m_angle_milieu_ab = (m_angle_a+m_angle_b)/2;
-
-
-    m_quat_a.setAxisAngleDegree(Vector(0,0,1),90);
-    Transform R;
-    m_quat_a.getMatrix44(R);
-    cout<<R<<endl;
-
-    R =RotationZ(90);
-    cout<<R<<endl;
     return 0;
 }
 
@@ -149,30 +136,13 @@ int CharAnimViewer::render()
 	// Affiche une pose du bvh
 	// bvhDrawGL(m_bvh, m_frameNumber);
     skeletonDraw(m_ske, Identity());
-    skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
-    skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
+    // skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
+    // skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
 
-    skeletonDraw(m_ske4, Translation(0.0, 50.0, 0.0));
-    skeletonDraw(m_ske5, Translation(75.0, 50.0, -15.0));
-    skeletonDraw(m_ske6, Translation(-75.0, 50.0, -15.0));
+    // skeletonDraw(m_ske4, Translation(0.0, 50.0, 0.0));
+    // skeletonDraw(m_ske5, Translation(75.0, 50.0, -15.0));
+    // skeletonDraw(m_ske6, Translation(-75.0, 50.0, -15.0));
 
-
-/*
-	// affiche 3 cylindres dont l'angle est interpole
-    draw_cylinder( Translation(5,0,0)*RotationZ(m_angle_a)*Scale(0.1,2,0.1) );
-    draw_cylinder( Translation(5,0,0)*RotationZ(m_angle_b)*Scale(0.1,2,0.1) );
-    draw_cylinder( Translation(5,0,0)*RotationZ(m_angle_milieu_ab)*Scale(0.1,2,0.1) );
-
-	// affiche 3 cylindres dont le quaternion est interpole
-    Transform R;
-    m_quat_a.getMatrix44(R);
-    draw_cylinder( Translation(-5,0,0)*R*Scale(0.1,2,0.1) );
-    m_quat_b.getMatrix44(R);
-    draw_cylinder( Translation(-5,0,0)*R*Scale(0.1,2,0.1) );
-    m_quat_milieu_ab.getMatrix44(R);
-    draw_cylinder( Translation(-5,0,0)*R*Scale(0.1,2,0.1) );
-
-*/
     return 1;
 }
 
@@ -188,31 +158,19 @@ int CharAnimViewer::update( const float time, const float delta )
         m_frameNumber = m_frameNumber % m_bvh.getNumberOfFrame(); 
         cout << m_frameNumber << endl; 
 
+        m_ske.setPose(m_bvh, m_frameNumber);
 
-        m_ske.setPoseInterpolation(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
-        // m_ske.setPose(m_bvh, m_frameNumber);
-        m_ske2.setPose(m_bvh, m_frameNumber);
-        m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
-        m_ske6.setPose(m_bvh, m_frameNumber);
-        m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
-
-
-        m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+        // m_ske.setPoseInterpolation(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+        // m_ske2.setPose(m_bvh, m_frameNumber);
+        // m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+        // m_ske6.setPose(m_bvh, m_frameNumber);
+        // m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+        // m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
     }   
     // m_ske.setPose(m_bvh, int(time / 75.0) % m_bvh.getNumberOfFrame());
     std::cout << "time " << time << std::endl;
     std::cout << "delta " << delta << std::endl;
-   
-/*
-    m_angle_a = int(0.1*time)%360;
-    m_angle_b = int(0.1*time+40)%360;
-    m_angle_milieu_ab = (m_angle_a+m_angle_b)/2;
 
-    Vector Z(0,0,1);
-    m_quat_a.setAxisAngleDegree(Z,m_angle_a); //m_quat_a.invert();
-    m_quat_b.setAxisAngleDegree(Z,m_angle_b); //m_quat_b.invert();
-    m_quat_milieu_ab = Quaternion::slerp( m_quat_a, m_quat_b, 0.5);
-*/
     return 0;
 }
 

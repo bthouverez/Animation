@@ -41,13 +41,6 @@ protected:
 
     void skeletonDraw(const Skeleton& ske, Transform t); 
 
-	// les 6 variables qui suivent sont pour illustrer comment marche les quaternions, vous pouvez les supprimer rapdidement :
-    float m_angle_a;
-    float m_angle_b;
-    float m_angle_milieu_ab;
-    Quaternion m_quat_a;
-    Quaternion m_quat_b;
-    Quaternion m_quat_milieu_ab;
 };
 
 

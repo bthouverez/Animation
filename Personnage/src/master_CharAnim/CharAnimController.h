@@ -1,15 +1,9 @@
 #ifndef CHAR_ANIM_CONTROLLER_H
 #define CHAR_ANIM_CONTROLLER_H
 
-// #include "window.h"
-// #include "program.h"
-// #include "texture.h"
-// #include "mesh.h"
-// #include "draw.h"
 #include "vec.h"
 #include "mat.h"
-// #include "orbiter.h"
-// #include "app.h"
+
 class CharAnimController {
 
 public:
@@ -30,7 +24,6 @@ public:
 	float velocity() const;
 
 protected:
-	Vector m_pos;
     Transform m_ch2w;   // matrice du character vers le monde
                         // le personnage se déplace vers X
                         // il tourne autour de Y
@@ -39,4 +32,5 @@ protected:
 	float m_v;          // le vecteur vitesse est m_v * m_ch2w * Vector(1,0,0)
 	float m_vMax;       // ne peut pas accélérer plus que m_vMax
 };
+
 #endif
