@@ -234,6 +234,9 @@ int Viewer::init()
     
     // Point interaction
     MousePos = Vector(0, 0, 0);
+
+
+    glEnable(GL_CULL_FACE);
     
     return 0;
     

@@ -23,6 +23,8 @@ public:
 	const Vector& direction() const;
 	float velocity() const;
 
+	Transform ctow();
+
 protected:
     Transform m_ch2w;   // matrice du character vers le monde
                         // le personnage se déplace vers X

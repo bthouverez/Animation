@@ -402,9 +402,28 @@ void ObjetSimuleMSS::initMeshObjet()
         m_ObjetSimule.vertex(v3);
     }
 
+    for (uint ii = 0; ii < P.size(); ++ii)
+    {
+        // Texture
+        Texture tex = _vectTexture[ii];
+        vec2 v2(tex.u, tex.v);
+        m_ObjetSimule.texcoord(v2);
+
+        // Normale
+        Vector v = _vectNormals[ii];
+        vec3 v3(-v);
+        m_ObjetSimule.normal(v3);
+
+        // Sommet
+        v = P[ii];
+        v3 = vec3(v);
+        m_ObjetSimule.vertex(v3);
+    }
+
     // Faces
     for (uint ii = 0; ii < _VIndices.size(); ii+=3) {
         m_ObjetSimule.triangle(_VIndices[ii], _VIndices[ii+1], _VIndices[ii+2]);
+        m_ObjetSimule.triangle(_VIndices[ii], _VIndices[ii+2], _VIndices[ii+1]);
     }
 
     /*    m_ObjetSimule = Mesh(GL_TRIANGLES);

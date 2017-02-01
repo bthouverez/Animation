@@ -245,3 +245,10 @@ void Skeleton::setPoseInterpolationQ(const simea::BVH& bvhSrc, int frameNbSrc, c
         m_joints[ii].m_l2w = l2w * res;
 	}    
 }
+
+float distance(const Skeleton& a, const Skeleton& b) {
+	if(a.numberOfJoint() != b.numberOfJoint()) {
+		return -1.0;
+	}
+	
+}

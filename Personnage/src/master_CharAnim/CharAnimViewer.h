@@ -9,6 +9,7 @@
 using namespace simea;		// oui oui c'est moche, à ne pas faire dans la vraie vie
 #include "Skeleton.h"
 #include "TransformQ.h"
+#include "CharAnimController.h"
 
 
 class CharAnimViewer : public Viewer
@@ -35,6 +36,7 @@ protected:
     Skeleton m_ske5;
     Skeleton m_ske6;
 
+    CharAnimController m_controller;
 
 	void bvhDrawGL(const BVH&, int frameNumber);
 	void bvhDrawGLRec(const BVHJoint&, int frameNumber, Transform& T); // la fonction récursive sur le squelette

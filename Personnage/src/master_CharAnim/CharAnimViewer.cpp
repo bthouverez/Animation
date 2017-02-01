@@ -30,6 +30,7 @@ int CharAnimViewer::init()
 
     //m_bvh.init("data/bvh/Robot.bvh" );
 	m_bvh.init(m_bvh_file);
+    m_bvh.scaleSkeleton(0.1);
 
     m_ske.init(m_bvh);
     // m_ske2.init(m_bvh);
@@ -38,6 +39,7 @@ int CharAnimViewer::init()
     // m_ske4.init(m_bvh);
     // m_ske5.init(m_bvh);
     // m_ske6.init(m_bvh);
+
 
     m_frameNumber = 0;
     cout<<endl<<"========================"<<endl;
@@ -113,7 +115,7 @@ void CharAnimViewer::skeletonDraw(const Skeleton& ske, Transform t) {
     for(int ii = 0; ii < ske.numberOfJoint(); ii++) {
 
         Vector pos = ske.getJointPosition(ii);
-        draw_sphere(Vector(t(Point(pos))), 0.5);
+        draw_sphere(Vector(t(Point(pos))), 0.2);
 
         Vector pos_father(0,0,0);
         if(ii > 0) {
@@ -135,7 +137,7 @@ int CharAnimViewer::render()
 
 	// Affiche une pose du bvh
 	// bvhDrawGL(m_bvh, m_frameNumber);
-    skeletonDraw(m_ske, Identity());
+    skeletonDraw(m_ske, m_controller.ctow());
     // skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
     // skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
 
@@ -152,22 +154,44 @@ int CharAnimViewer::update( const float time, const float delta )
     // time est le temps ecoule depuis le demarrage de l'application, en millisecondes,
     // delta est le temps ecoule depuis l'affichage de la derniere image / le dernier appel a draw(), en millisecondes.
 
+    float time_s = time / 1000.0;
+    float frameTime = m_bvh.getFrameTime();
+    int nb_frame_passed = time_s / frameTime;
+    float time_frame_passed = nb_frame_passed * frameTime;
+    float diff_time = time_s - time_frame_passed;
+    float t = diff_time / frameTime;
+
     if (key_state('z')) { 
+        m_controller.accelerate(0.01f);
+    }  
+    if (key_state('s')) { 
+        m_controller.accelerate(-0.01f);
+    }  
+    if (key_state('q')) { 
+        m_controller.turnXZ(1.0);
+    }  
+    if (key_state('d')) { 
+        m_controller.turnXZ(-1.0);
+    }  
+
+    if (key_state('w')) { 
         //clear_key_state('z');  
         m_frameNumber++; 
         m_frameNumber = m_frameNumber % m_bvh.getNumberOfFrame(); 
         cout << m_frameNumber << endl; 
 
-        m_ske.setPose(m_bvh, m_frameNumber);
-
+        // m_ske.setPose(m_bvh, m_frameNumber);
         // m_ske.setPoseInterpolation(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
         // m_ske2.setPose(m_bvh, m_frameNumber);
         // m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
         // m_ske6.setPose(m_bvh, m_frameNumber);
         // m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
         // m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
-    }   
-    // m_ske.setPose(m_bvh, int(time / 75.0) % m_bvh.getNumberOfFrame());
+    }  
+
+    m_ske.setPoseInterpolationQ(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame(), m_bvh, (nb_frame_passed+1) % m_bvh.getNumberOfFrame(), t);
+    m_controller.update(t);
+    // m_ske.setPose(m_bvh, int(time/2) % m_bvh.getNumberOfFrame());
     std::cout << "time " << time << std::endl;
     std::cout << "delta " << delta << std::endl;
 

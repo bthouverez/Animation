@@ -14,11 +14,11 @@ void CharAnimController::turn(const Transform& transf_v) {
 }
 
 void CharAnimController::turnXZ(const float& rot_angle_v) {
-    m_ch2w = m_ch2w * RotationY( rot_angle_v);
+    m_ch2w = m_ch2w * RotationY(rot_angle_v);
 }
 
 void CharAnimController::accelerate(const float& speed_inc) {
-	if(m_v + speed_inc <= m_vMax)
+	if(m_v + speed_inc <= m_vMax && m_v + speed_inc > 0)
 		m_v += speed_inc;
 }
 
@@ -47,4 +47,8 @@ const Vector& CharAnimController::direction() const {
 float CharAnimController::velocity() const {
 	return m_v;
 
+}
+
+Transform CharAnimController::ctow() {
+    return m_ch2w;
 }

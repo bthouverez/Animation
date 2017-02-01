@@ -114,9 +114,9 @@ int Viewer::render( )
 
     // Rajouter ici les appels pour afficher votre objet non simule
     // Exemple :
-    //gl.texture(m_votreObjet_texture);
-    //gl.model(...);
-    //gl.draw(m_votreObjet);
+    gl.texture(m_votreObjet_texture);
+    gl.model(Identoty());
+    gl.draw(m_votreObjet);
 
     // Gestion de la lumiere
     //gl.lighting(false);
