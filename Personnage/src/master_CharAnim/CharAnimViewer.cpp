@@ -15,6 +15,10 @@ CharAnimViewer::CharAnimViewer()
 
 CharAnimViewer::CharAnimViewer(char * bvh_start, char* bvh_directory): Viewer(), m_frameNumber(0), m_bvh_file(bvh_start), m_mg(bvh_directory)
 {
+    if(strcmp(bvh_directory, "null") == 0) {
+        b_mg = false;
+    }
+
 }
 
 
@@ -48,8 +52,10 @@ int CharAnimViewer::init()
         m_ske6.init(m_bvh);
     #endif
 
-   m_mg.init();
-   m_mg.print();
+    if(b_mg) {
+       m_mg.init();
+       m_mg.print();        
+    }
 
 
     m_frameNumber = 0;

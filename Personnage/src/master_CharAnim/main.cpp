@@ -12,7 +12,7 @@ int main( int argc, char **argv )
 	}
 
 	char * arg2 = (char*) malloc( 100 ); // reserve 100 bytes in memory
-	strcpy(arg2, "data/bvh/motionTest/"); 
+	strcpy(arg2, "null"); 
 
 	if(argc == 3) strcpy(arg2, argv[2]);
 

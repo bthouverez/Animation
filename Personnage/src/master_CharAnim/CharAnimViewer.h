@@ -44,6 +44,7 @@ protected:
     CharAnimController m_controller;
 
     MotionGraph m_mg;
+    bool b_mg = true;
 
 	void bvhDrawGL(const BVH&, int frameNumber);
 	void bvhDrawGLRec(const BVHJoint&, int frameNumber, Transform& T); // la fonction récursive sur le squelette

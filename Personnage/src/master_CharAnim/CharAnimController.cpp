@@ -36,11 +36,11 @@ void CharAnimController::setVelocityNorm(const float v) {
 	m_v = v;
 }
 
-const Vector& CharAnimController::position() const {
+const Vector CharAnimController::position() const {
     return Vector(m_ch2w(Point(1,0,0)));
 }
 
-const Vector& CharAnimController::direction() const {
+const Vector CharAnimController::direction() const {
     return m_ch2w(Vector(1,0,0));
 }
 

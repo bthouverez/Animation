@@ -19,8 +19,8 @@ public:
 	void setPosition(const Vector& p);
 	void setVelocityNorm(const float v);
 
-	const Vector& position() const;
-	const Vector& direction() const;
+	const Vector position() const;
+	const Vector direction() const;
 	float velocity() const;
 
 	Transform ctow();
