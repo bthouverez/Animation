@@ -18,7 +18,7 @@ void CharAnimController::turnXZ(const float& rot_angle_v) {
 }
 
 void CharAnimController::accelerate(const float& speed_inc) {
-	if(m_v + speed_inc <= m_vMax && m_v + speed_inc > 0)
+	if(m_v + speed_inc <= m_vMax && m_v + speed_inc >= 0)
 		m_v += speed_inc;
 }
 

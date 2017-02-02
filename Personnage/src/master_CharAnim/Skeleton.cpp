@@ -5,7 +5,6 @@ using namespace simea;
 
 void Skeleton::init(const BVH& bvh)
 {
-	std::cout << "Init " << Identity() << std::endl;
 	for (int ii = 0; ii < bvh.getNumberOfJoint(); ii++) {
 		BVHJoint joint = bvh.getJoint(ii);
 		SkeletonJoint skej;
@@ -18,7 +17,6 @@ void Skeleton::init(const BVH& bvh)
 
 void Skeleton::init(const BVH& bvh, Transform tr)
 {
-	std::cout << "Init " << tr << std::endl;
 	for (int ii = 0; ii < bvh.getNumberOfJoint(); ii++) {
 		BVHJoint joint = bvh.getJoint(ii);
 		SkeletonJoint skej;
@@ -246,9 +244,16 @@ void Skeleton::setPoseInterpolationQ(const simea::BVH& bvhSrc, int frameNbSrc, c
 	}    
 }
 
-float distance(const Skeleton& a, const Skeleton& b) {
-	if(a.numberOfJoint() != b.numberOfJoint()) {
-		return -1.0;
+float distance(const Skeleton& sk1, const Skeleton& sk2) {
+	if(sk1.numberOfJoint() != sk2.numberOfJoint())	{
+		return -1;
 	}
-	
+
+	float res = 0.f;
+	// Pour chaque joint du bvh
+	for(int ii = 1; ii < sk1.numberOfJoint(); ii++) {
+		// Calcule la distance entre les deux joints
+		res += distance(Point(sk1.getJointPosition(ii)), Point(sk2.getJointPosition(ii)));
+	}
+	return res;
 }

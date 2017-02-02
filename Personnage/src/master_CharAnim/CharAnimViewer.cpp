@@ -9,11 +9,11 @@
 using namespace std;
 
 
-CharAnimViewer::CharAnimViewer() : Viewer(), m_frameNumber(0), m_bvh_file("data/bvh/motionGraph/courir.bvh")
+CharAnimViewer::CharAnimViewer()
 {
 }
 
-CharAnimViewer::CharAnimViewer(std::string file): Viewer(), m_frameNumber(0), m_bvh_file(file)
+CharAnimViewer::CharAnimViewer(char * bvh_start, char* bvh_directory): Viewer(), m_frameNumber(0), m_bvh_file(bvh_start), m_mg(bvh_directory)
 {
 }
 
@@ -28,25 +28,36 @@ int CharAnimViewer::init()
     init_sphere();
 
 
-    //m_bvh.init("data/bvh/Robot.bvh" );
+
 	m_bvh.init(m_bvh_file);
-    m_bvh.scaleSkeleton(0.1);
+
+    #if COMP_INTERP
+        m_bvh.scaleSkeleton(0.3);
+    #else
+        m_bvh.scaleSkeleton(0.2);
+    #endif
 
     m_ske.init(m_bvh);
-    // m_ske2.init(m_bvh);
-    // m_ske3.init(m_bvh);
 
-    // m_ske4.init(m_bvh);
-    // m_ske5.init(m_bvh);
-    // m_ske6.init(m_bvh);
+    #if COMP_INTERP
+        m_ske2.init(m_bvh);
+        m_ske3.init(m_bvh);
+
+        m_ske4.init(m_bvh);
+        m_ske5.init(m_bvh);
+        m_ske6.init(m_bvh);
+    #endif
+
+   m_mg.init();
+   m_mg.print();
 
 
     m_frameNumber = 0;
-    cout<<endl<<"========================"<<endl;
+   /* cout<<endl<<"========================"<<endl;
     cout<<"BVH decription"<<endl;
     cout<<m_bvh<<endl;
     cout<<endl<<"========================"<<endl;
-
+*/
     return 0;
 }
 
@@ -138,12 +149,16 @@ int CharAnimViewer::render()
 	// Affiche une pose du bvh
 	// bvhDrawGL(m_bvh, m_frameNumber);
     skeletonDraw(m_ske, m_controller.ctow());
-    // skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
-    // skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
 
-    // skeletonDraw(m_ske4, Translation(0.0, 50.0, 0.0));
-    // skeletonDraw(m_ske5, Translation(75.0, 50.0, -15.0));
-    // skeletonDraw(m_ske6, Translation(-75.0, 50.0, -15.0));
+
+    #if COMP_INTERP
+        skeletonDraw(m_ske2, Translation(-75.0, 0.0, -15.0));
+        skeletonDraw(m_ske3, Translation(75.0, 0.0, -15.0));
+
+        skeletonDraw(m_ske4, Translation(0.0, 50.0, 0.0));
+        skeletonDraw(m_ske5, Translation(75.0, 50.0, -15.0));
+        skeletonDraw(m_ske6, Translation(-75.0, 50.0, -15.0));
+    #endif
 
     return 1;
 }
@@ -180,20 +195,31 @@ int CharAnimViewer::update( const float time, const float delta )
         m_frameNumber = m_frameNumber % m_bvh.getNumberOfFrame(); 
         cout << m_frameNumber << endl; 
 
-        // m_ske.setPose(m_bvh, m_frameNumber);
-        // m_ske.setPoseInterpolation(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
-        // m_ske2.setPose(m_bvh, m_frameNumber);
-        // m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
-        // m_ske6.setPose(m_bvh, m_frameNumber);
-        // m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
-        // m_ske4.setPoseInterpolationQ(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+        m_ske.setPose(m_bvh, m_frameNumber);
+        m_ske.setPoseInterpolationQ(m_bvh, m_frameNumber, m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
+        m_ske2.setPose(m_bvh, m_frameNumber);
+        m_ske3.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+        m_ske6.setPose(m_bvh, m_frameNumber);
+        m_ske5.setPose(m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame());
+        m_ske4.setPoseInterpolation(m_bvh, m_frameNumber,m_bvh, (m_frameNumber+40) % m_bvh.getNumberOfFrame(), 0.5);
     }  
 
-    m_ske.setPoseInterpolationQ(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame(), m_bvh, (nb_frame_passed+1) % m_bvh.getNumberOfFrame(), t);
+    #if COMP_INTERP
+        m_ske.setPoseInterpolationQ(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame(), m_bvh, (nb_frame_passed + 40) % m_bvh.getNumberOfFrame(), 0.5);
+        m_ske2.setPose(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame());
+        m_ske3.setPose(m_bvh, (nb_frame_passed + 40) % m_bvh.getNumberOfFrame());
+
+        m_ske4.setPoseInterpolation(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame(), m_bvh, (nb_frame_passed + 40) % m_bvh.getNumberOfFrame(), 0.5);
+        m_ske6.setPose(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame());
+        m_ske5.setPose(m_bvh, (nb_frame_passed + 40) % m_bvh.getNumberOfFrame());
+    #else
+        m_ske.setPoseInterpolationQ(m_bvh, nb_frame_passed % m_bvh.getNumberOfFrame(), m_bvh, (nb_frame_passed+1) % m_bvh.getNumberOfFrame(), t);
+    #endif
+
     m_controller.update(t);
     // m_ske.setPose(m_bvh, int(time/2) % m_bvh.getNumberOfFrame());
-    std::cout << "time " << time << std::endl;
-    std::cout << "delta " << delta << std::endl;
+    // std::cout << "time " << time << std::endl;
+    // std::cout << "delta " << delta << std::endl;
 
     return 0;
 }

@@ -1,0 +1,19 @@
+
+Points=./data/drap70/points.eti;  
+FaceSet=./data/drap70/faceset.eti; 
+Textures=./data/drap70/texcoord.eti;
+
+ #Masses=./data/drap70/masses.eti;
+Masses=./data/drap70/masses_flag.eti;
+
+k=15000.0;
+nu=0.01; 
+
+#dt=0.0025;
+
+dt=0.005;
+
+Interaction=yes;
+
+UseTexture=1;
+

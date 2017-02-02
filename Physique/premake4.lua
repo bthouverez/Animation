@@ -3,18 +3,15 @@ solution "gKit2light"
 
 	platforms { "x64", "x32" }
 	
-	includedirs { ".", "src/gKit" }
-	
-	gkit_dir = path.getabsolute(".")
-	
+	includedirs { ".", "./src/gKit" }
 	
 	configuration "debug"
-		targetdir "bin/debug"
+		targetdir "./bin/debug"
 		defines { "DEBUG" }
 		flags { "Symbols" }
 
 	configuration "release"
-		targetdir "bin/release"
+		targetdir "./bin/release"
 --~ 		defines { "NDEBUG" }
 --~ 		defines { "GK_RELEASE" }
 		flags { "OptimizeSpeed" }
@@ -24,7 +21,7 @@ solution "gKit2light"
 		buildoptions { "-std=c++11" }
 		buildoptions { "-W -Wall -Wextra -Wsign-compare -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable", "-pipe" }
 		buildoptions { "-flto"}
-		linkoptions { "-flto -fopenmp"}
+		linkoptions { "-flto"}
 		links { "GLEW", "SDL2", "SDL2_image", "GL" }
 
 	configuration { "linux", "debug" }
@@ -51,30 +48,20 @@ solution "gKit2light"
 		libdirs { "extern/mingw/lib" }
 		links { "mingw32", "SDL2main", "SDL2", "SDL2_image", "opengl32", "glew32" }
 		
-	configuration { "windows", "vs2013" }
-		if _PREMAKE_VERSION >="5.0" then
-			system "Windows"
-			architecture "x64"
-			disablewarnings { "4244", "4305" }
-		end
+	configuration { "windows", "vs2013", "x64" }
 		includedirs { "extern/visual2013/include" }
 		libdirs { "extern/visual2013/lib" }
 		platforms { "x64" }
 		links { "opengl32", "glew32", "SDL2", "SDL2main", "SDL2_image" }
 
 		
-	configuration { "windows", "vs2015" }
-		if _PREMAKE_VERSION >="5.0" then
-			system "Windows"
-			architecture "x64"
-			disablewarnings { "4244", "4305" }
-		end
+	configuration { "windows", "vs2015", "x64" }
 		includedirs { "extern/visual2015/include" }
 		libdirs { "extern/visual2015/lib" }
 		links { "opengl32", "glew32", "SDL2", "SDL2main", "SDL2_image" }
 		
 	configuration "macosx"
-		frameworks= "-F /Library/Frameworks/"
+		local frameworks= "-F /Library/Frameworks/"
 		buildoptions { "-std=c++11" }
 		defines { "GK_MACOS" }
 		buildoptions { frameworks }
@@ -82,20 +69,35 @@ solution "gKit2light"
 
 
  -- description des fichiers communs
-gkit_files = { gkit_dir .. "/src/gKit/*.cpp", gkit_dir .. "/src/gKit/*.h" }
+local gkit_files = { "src/gKit/*.cpp", "src/gKit/*.h" }
+
+ -- description des projets		
 
 
--- master_CharAnim
-gfx_masterCharAnim_dir = path.getabsolute(".")
-
-master_CharAnim_files = {	gfx_masterCharAnim_dir .. "/src/master_CharAnim/*.cpp", 
-							gfx_masterCharAnim_dir .. "/src/master_CharAnim/*.h"
-	}
-	
-project("master_CharAnim")
+project("master_meca_sim_etudiant")
     language "C++"
     kind "ConsoleApp"
-    targetdir ( gfx_masterCharAnim_dir .. "/bin" )
-	includedirs { gfx_masterCharAnim_dir .. "/src/master_CharAnim/" }
+    targetdir "./bin"
     files ( gkit_files )
-    files ( master_CharAnim_files )
+    files { 	"src-etudiant/main.cpp",
+		"src-etudiant/Viewer.cpp", 
+		"src-etudiant/Viewer.h", 
+		"src-etudiant/Viewer-init.cpp",
+		"src-etudiant/MSS.cpp",
+		"src-etudiant/MSS.h",
+		"src-etudiant/Noeuds.h",
+		"src-etudiant/Scene.cpp",
+		"src-etudiant/Scene.h",
+		"src-etudiant/ObjetSimule.cpp",
+		"src-etudiant/ObjetSimule.h",
+		"src-etudiant/ObjetSimuleMSS.cpp",
+		"src-etudiant/ObjetSimuleMSS.h",
+		"src-etudiant/ObjetSimuleParticule.cpp",
+		"src-etudiant/ObjetSimuleParticule.h",
+		"src-etudiant/Properties.cpp",
+		"src-etudiant/Properties.h",
+		"src-etudiant/Param.cpp",
+		"src-etudiant/Calculs.cpp", 
+		"src-etudiant/CalculsMSS.cpp", 
+		"src-etudiant/CalculsParticule.cpp" }
+
